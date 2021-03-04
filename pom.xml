@@ -8,5 +8,13 @@
     <artifactId>JRedis</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+    </dependencies>
+
 
 </project>
