@@ -1,5 +1,11 @@
 package com.amir01.jredis;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -9,6 +15,8 @@ public class Main {
     public static void main(String[] args) {
 
         RedisClient redisClient = RedisClient.getInstance();
+        String fileName = "../NYSE_20210301.csv";
+        init_redis(redisClient, fileName);
         while(scan.hasNext()) {
             String command = scan.nextLine();
             String[] split_command = splitter(command);
@@ -79,6 +87,17 @@ public class Main {
         }
 
         return false;
+    }
+
+    public static void init_redis(RedisClient redisClient, String csv_path) {
+        try (CSVReader reader = new CSVReader(new FileReader(csv_path))) {
+
+            List<String[]> r = reader.readAll();
+            r.forEach(x -> redisClient.getJedisInstance().set(x[0], x[1]));
+
+        } catch (IOException | CsvException ex) {
+            ex.printStackTrace();
+        }
     }
 
 }
