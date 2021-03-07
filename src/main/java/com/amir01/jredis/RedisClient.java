@@ -44,6 +44,22 @@ public class RedisClient {
 
     /**
      * public method to retrieve object of this class
+     * and initialize Jedis object automatically
+     *
+     * @return instance of RedisClient class
+     */
+    public static RedisClient getInstance() {
+
+        if(INSTANCE == null) {
+            INSTANCE = new RedisClient();
+            INSTANCE.setJedisInstance(new Jedis("localhost"));
+        }
+        return INSTANCE;
+
+    }
+
+    /**
+     * public method to retrieve object of this class
      *
      * @param jedisInstance instance of Jedis Client
      * @return instance of RedisClient class
@@ -64,7 +80,7 @@ public class RedisClient {
      * @param key key name
      * @return final existence status of input key
      */
-    private boolean isExist(String key) {
+    public boolean isExist(String key) {
 
         try {
 
@@ -89,7 +105,7 @@ public class RedisClient {
         try{
 
             String message = this.jedisInstance.set(key, value, new SetParams().nx());
-            if(message.equals("OK")) {
+            if(message != null) {
                 return true;
             }
 
@@ -134,7 +150,7 @@ public class RedisClient {
         try{
 
             String message = this.jedisInstance.set(key, value, new SetParams().xx());
-            if(message.equals("OK")) {
+            if(message != null) {
                 return true;
             }
 
@@ -165,6 +181,13 @@ public class RedisClient {
         }
 
         return true;
+    }
+
+    /**
+     * close jedisInstance
+     */
+    public void jedisClose() {
+        this.jedisInstance.close();
     }
 
 }
